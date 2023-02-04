@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Models.EntityFramework.VIEC_LAM>
+
+@foreach (var item in Model)
+{
+  
+    <li class="discounts-i">
+        <a href="product.html" class="discounts-i-img">
+            <img src="@item.LINK_ANH_CHINH" alt="@item.TEN_VL">
+        </a>
+        <h3 class="discounts-i-ttl">
+            @Html.RouteLink(item.TEN_VL , new {action = "SanPham" , id = item.SLUG})
+           @* <a href="@Html.RouteLink("RouteClient",new { action = "SanPham" , id = item.SLUG })">content</a>*@
+           @* <a href="@Url.Action("SanPham" , "Home" , new { id = item.SLUG})">@item.TEN_SP</a>*@
+        </h3>
+        <p class="discounts-i-price">
+            <b>@String.Format("{0:0,0}", item.MUC_LUONG)</b> VND
+        </p>
+    </li>
+}

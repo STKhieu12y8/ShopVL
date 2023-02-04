@@ -1,0 +1,74 @@
+﻿@model List<ShopQuanAo.Object.CartItem>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section jsFooter{
+        
+        <script>
+            $(document).on("change", ".quantity", function (e) {
+                e.preventDefault();
+                var quantity = $(this).val();
+                quantity = Number(quantity);
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '/GioHang/Update/' + id + '/' + quantity,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+            });
+            $(document).on("click", ".cart-remove", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '/GioHang/Delete/' + id ,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+            });
+        </script>
+    
+    }
+<section class="container stylization maincont">       
+        
+        <div class="cart-submit">
+            <form action="@Url.RouteUrl("giohang" , new { action="ThanhToan" })" method="post">
+                @Html.AntiForgeryToken()
+                <div class="auth-col">
+                    <h2>Thông Tin Cá nhân</h2>
+
+                    <p>
+                        <label for="username">Họ Và Tên<span class="required">*</span></label><input type="text" name="username" id="username">
+                    </p>
+                    <p>
+                        <label for="phone">Số Điện Thoại <span class="required">*</span></label><input type="text" name="phone" id="phone">
+                    </p>
+                    <p>
+                        <label for="diachi">Địa Chỉ <span class="required">*</span></label><input type="text" name="diachi" id="diachi">
+                    </p><p>
+                        <label for="hoso"> Hồ Sơ (CV) <span class="required">*</span></label><input type="file" name="hoso" id="hoso">
+                    </p>
+                    <p>
+                        <label for="note">Giới thiệu ngắn về bản thân <span class="required">*</span></label><textarea cols="4" id="password" name="note"></textarea>
+                    </p>
+                    @if (Session["ThanhToan"]!= null)
+                    {
+                        <p class=" alert-success"> @Session["ThanhToan"]</p>
+                        Session.Remove("ThanhToan");
+                    }
+                </div>
+                <button type="submit" class="cart-submit-btn">Tạo pfrofile</button>
+                <a href="@Url.RouteUrl("giohang", new { action = "DeleteCart" })" class=" cart-clear ">Hủy</a>
+
+               </form>
+        </div>
+    <!-- Cart Items - end -->
+
+</section>
+

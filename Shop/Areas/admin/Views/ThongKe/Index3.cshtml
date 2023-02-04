@@ -1,0 +1,182 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/admin/Views/Shared/_Layout.cshtml";
+
+}
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/admin/Views/Shared/_Layout.cshtml";
+
+}
+
+@model PagedList.IPagedList<Models.ADO.ModelsSanPham>
+
+@using PagedList.Mvc;
+
+@section jsFooter{
+    <script>
+        $(document).ready(function () {
+            $(".btn-view-details").off("click").on("click", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                $("#Modal-" + id).modal();
+            });
+            $(document).on("click", ".btn-view-edit-sp", function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                location.href = "/admin/sanpham/edit/" + id;
+            });
+        });</script>
+    <script>
+        $(".btn-view-delete-sp").off("click").on("click", function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            var id = btn.data("id");
+            console.log(id);
+            Swal.fire({
+                title: 'Delete',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/admin/SanPham/Delete/' + id,
+                        dataType: 'json',
+                        type: "get"
+                    }).done(function (data) {
+                        // If successful
+                        if (data.status == "success") {
+                            Swal.fire("", "", data.status);
+                            var row = $(".table-product").children("tbody").find("tr#row_" + id);
+                            row.remove();
+                        } else {
+                            Swal.fire("", "", data.status);
+                        }
+                    })
+                }
+            });
+        });</script>
+}
+@section cssHeader{
+
+    <style>
+        ul.pagination {
+            justify-content: center;
+        }
+
+            ul.pagination li {
+                display: inline;
+                background: #e9ecef;
+            }
+
+                ul.pagination li.active {
+                    background: teal;
+                    color: white;
+                }
+
+                ul.pagination li a {
+                    color: black;
+                    float: left;
+                    padding: 8px 16px;
+                    text-decoration: none;
+                    font-size: 16px;
+                    transition: background-color .3s;
+                }
+
+                    ul.pagination li a.active {
+                        background: teal;
+                        color: white;
+                    }
+
+                    ul.pagination li a:hover:not(.active) {
+                        background-color: #ddd;
+                    }
+    </style>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="padding: 0 15px;">
+    <h3 class="">Thống kê hồ sơ (CV)</h3>
+</div>
+
+<div class="section__content section__content--p30">
+
+    <div class="container-fluid">
+        <div class="row m-t-30">
+            <div class="col-md-12">
+
+                <div class="table-responsive m-b-40">
+                    <table class="table table-borderless table-data3 table-product">
+                        <thead>
+                            <tr class="text-left">
+                                <th width="20%">Số thứ tự</th>
+                                <th width="60%">Ngành nghề</th>
+                                <th width="20%" class="text-center">Số Lượng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-left">
+                                <th width="20%">1</th>
+                                <th width="60%">Lập trình</th>
+                                <th width="20%" class="text-center">1202</th>
+                            </tr>
+                            <tr class="text-left">
+                                <th width="20%">2</th>
+                                <th width="60%">Kế Toán</th>
+                                <th width="20%" class="text-center">200</th>
+                            </tr>
+                            <tr class="text-left">
+                                <th width="20%">3</th>
+                                <th width="60%">Kỹ Sư</th>
+                                <th width="20%" class="text-center">40</th>
+                            </tr>
+                            <tr class="text-left">
+                                <th width="20%">4</th>
+                                <th width="60%">Lái xe</th>
+                                <th width="20%" class="text-center">1000</th>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Modal footer -->
+                <div id="myChart1" style="max-width:100%; height:500px"></div>               
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END DATA TABLE-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="copyright">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Contry', 'Mhl'],
+            ['Lập trình', 1202],
+            ['Kế Toán', 200],
+            ['Kỹ sư', 40],
+            ['Lái xe', 1000],
+
+        ]);
+
+        var options = {
+            title: 'Biểu đồ tỷ lệ các ngành nghề'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('myChart1'));
+        chart.draw(data, options);
+    }
+</script>

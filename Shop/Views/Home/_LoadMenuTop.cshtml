@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Models.EntityFramework.LOAI_NGANH_NGHE>
+
+@foreach (var item in Model) {
+<li>
+    
+    <a href="@Url.RouteUrl("RouteClient" , new { action = "DanhMuc", id = item.SLUG})">
+        @item.TEN_LOAI_VL
+    </a>
+</li>
+}
+
